@@ -8,6 +8,8 @@ option = st.selectbox(
     ["Option 1", "Option 2", "Option 3"]
 )
 
+
+
 import streamlit as st
 import gdown
 import zipfile
@@ -38,10 +40,14 @@ for root, dirs, files in os.walk("extracted_files"):
     for file in files:
         extracted_files.append(os.path.join(root, file))
 
-# Step 5: Sort the extracted files in ascending order by filename
+# Step 5: Show the list of extracted files
+st.write("List of extracted files:")
+st.write(extracted_files)  # Display the entire list of file paths
+
+# Step 6: Sort the extracted files in ascending order by filename
 extracted_files = sorted(extracted_files)
 
-# Step 6: Find the first image file in sorted order
+# Step 7: Find the first image file in sorted order
 image_files = [f for f in extracted_files if f.lower().endswith(('jpg', 'jpeg', 'png'))]
 
 if image_files:
@@ -51,7 +57,3 @@ if image_files:
     st.image(first_image, caption=f"Displaying {os.path.basename(first_image_path)}", use_column_width=True)
 else:
     st.write("No image files found in the extracted folder.")
-
-st.write("List of extracted files:")
-for i in extracted_files:
-    st.write(i)
