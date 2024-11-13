@@ -32,9 +32,22 @@ with zipfile.ZipFile(output_path, 'r') as zip_ref:
     zip_ref.extractall("extracted_files")
 
 # Step 4: List extracted files
-st.write("Files extracted:")
-for root, dirs, files in os.walk("extracted_files"):
-    for file in files:
-        st.write(file)
+#st.write("Files extracted:")
+#for root, dirs, files in os.walk("extracted_files"):
+#    for file in files:
+#        st.write(file)
+
+
+# Step 5: Display an image (if any image files are found)
+# Check if there are any image files in the extracted files
+image_files = [f for f in extracted_files if f.lower().endswith(('jpg', 'jpeg', 'png'))]
+
+if image_files:
+    # Display the first image in the extracted files
+    image_path = image_files[0]  # You can choose any image from the list
+    image = Image.open(image_path)
+    st.image(image, caption=f"Displaying {os.path.basename(image_path)}", use_column_width=True)
+else:
+    st.write("No image files found in the extracted folder.")
 
 
