@@ -53,5 +53,5 @@ else:
     st.write("No image files found in the extracted folder.")
 
 st.write("List of extracted files:")
-for file in extracted_files:
-    st.write(file)
+for i in extracted_files:
+    st.write(i)
