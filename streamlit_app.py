@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.title("🎈 My new app")
+st.title("🎈 My new app prueba")
 
 #selected_nationality = st.selectbox("Select Nationality", "Select Position")
 option = st.selectbox(
