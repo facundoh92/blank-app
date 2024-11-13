@@ -29,7 +29,7 @@ with zipfile.ZipFile(output_path, 'r') as zip_ref:
     zip_ref.extractall("extracted_files")
 
 # Step 4: List extracted files
-st.write("Files extracted:")
-for root, dirs, files in os.walk("extracted_files"):
-    for file in files:
-        st.write(file)
+#st.write("Files extracted:")
+#for root, dirs, files in os.walk("extracted_files"):
+#    for file in files:
+#        st.write(file)
