@@ -1,6 +1,8 @@
 import streamlit as st
-
-st.title("🎈 My new app prueba")
+from PIL import Image
+import os
+from model import model_interp,vae_loaded,show_interp
+st.title("🎈 My new app prueba mensaje")
 
 #selected_nationality = st.selectbox("Select Nationality", "Select Position")
 option = st.selectbox(
@@ -9,51 +11,28 @@ option = st.selectbox(
 )
 
 
-
-import streamlit as st
-import gdown
-import zipfile
-import os
-from PIL import Image
-
-# Step 1: Install gdown if necessary
-try:
-    import gdown
-except ImportError:
-    import subprocess
-    subprocess.run(["pip", "install", "gdown"])
-
-# Step 2: Download the file from Google Drive
-file_url = "https://drive.google.com/uc?id=1zpT6gHzvbr21_Vq4NjpRY0JGSaQOSANa"
-output_path = "fifa.zip"
-gdown.download(file_url, output_path, quiet=False)
-
-# Step 3: Unzip the file
-with zipfile.ZipFile(output_path, 'r') as zip_ref:
-    zip_ref.extractall("extracted_files")
-
-# Step 4: Initialize the list to hold the paths of extracted files
-extracted_files = []
-
-# List all files in the extracted folder
-for root, dirs, files in os.walk("extracted_files"):
-    for file in files:
-        extracted_files.append(os.path.join(root, file))
-
-# Step 5: Show the list of extracted files
-st.write("List of extracted files:")
-st.write(extracted_files)  # Display the entire list of file paths
-
-# Step 6: Sort the extracted files in ascending order by filename
-extracted_files = sorted(extracted_files)
-
-# Step 7: Find the first image file in sorted order
-image_files = [f for f in extracted_files if f.lower().endswith(('jpg', 'jpeg', 'png'))]
-
-if image_files:
     # Display the first image in the sorted list
-    first_image_path = image_files[1]
-    first_image = Image.open(first_image_path)
-    st.image(first_image, caption=f"Displaying {os.path.basename(first_image_path)}", use_column_width=True)
-else:
-    st.write("No image files found in the extracted folder.")
+
+#first_image = Image.open('/workspaces/blank-app/extracted_files/Images/0.png')
+#st.image(first_image, caption=f"Displaying {os.path.basename('/workspaces/blank-app/extracted_files/Images/0.png')}", use_column_width=True)
+
+import pandas as pd
+data = pd.read_csv("/workspaces/blank-app/filtered_data_fix2_withimages.csv")
+filtered = data[data['Nationality'] == 'France']
+filtered.to_csv('/workspaces/blank-app/filtered.csv', index=False)
+names = list(filtered["Name"])
+ids = list(filtered["realidnumber"])
+#print(data)
+#print(filtered)
+
+print(names)
+print(ids)
+
+import random
+
+index1 = 14
+index2 = 42
+
+interp_result = model_interp(model = vae_loaded, index1 = index1, index2 = index2).unbind(0)
+imgs = [img.permute(1,2,0).cpu() for img in interp_result]
+show_interp(imgs,index1,index2, scale=2);
