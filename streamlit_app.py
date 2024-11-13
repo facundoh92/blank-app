@@ -51,3 +51,7 @@ if image_files:
     st.image(first_image, caption=f"Displaying {os.path.basename(first_image_path)}", use_column_width=True)
 else:
     st.write("No image files found in the extracted folder.")
+
+st.write("List of extracted files:")
+for file in extracted_files:
+    st.write(file)
