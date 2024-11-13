@@ -8,10 +8,14 @@ option = st.selectbox(
     ["Option 1", "Option 2", "Option 3"]
 )
 
+
+
+
 import streamlit as st
 import gdown
 import zipfile
 import os
+from PIL import Image
 
 # Download and extract data function
 def download_and_extract():
@@ -39,3 +43,16 @@ st.title("Streamlit File Download and Extraction")
 # Button to start downloading and extracting
 if st.button("Download and Extract FIFA Data"):
     download_and_extract()
+
+    # Display one image from the extracted data
+    # Assuming there are image files in the 'data' folder
+    image_folder = "data"  # Folder where images are extracted
+    image_files = [f for f in os.listdir(image_folder) if f.endswith(('jpg', 'jpeg', 'png'))]
+
+    if image_files:
+        # Display the first image in the folder
+        image_path = os.path.join(image_folder, image_files[0])
+        image = Image.open(image_path)
+        st.image(image, caption=f"Image: {image_files[0]}", use_column_width=True)
+    else:
+        st.write("No images found in the extracted folder.")
