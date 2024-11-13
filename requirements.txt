@@ -1,1 +1,2 @@
 streamlit
+torch==2.5.0+cu121 -f https://download.pytorch.org/whl/torch_stable.html
