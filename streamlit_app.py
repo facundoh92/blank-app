@@ -28,7 +28,7 @@ def download_and_extract():
     gdown.download(file_url, output_path, quiet=False)
 
     # Unzip the file into the 'data' folder
-    data_folder = "data"
+    data_folder = "extracted_files"
     os.makedirs(data_folder, exist_ok=True)  # Create the folder if it doesn't exist
 
     st.write("Extracting the files...")
