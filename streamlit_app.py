@@ -52,7 +52,7 @@ image_files = [f for f in extracted_files if f.lower().endswith(('jpg', 'jpeg', 
 
 if image_files:
     # Display the first image in the sorted list
-    first_image_path = image_files[0]
+    first_image_path = image_files[1]
     first_image = Image.open(first_image_path)
     st.image(first_image, caption=f"Displaying {os.path.basename(first_image_path)}", use_column_width=True)
 else:
