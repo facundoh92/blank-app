@@ -12,8 +12,7 @@ import streamlit as st
 import gdown
 import zipfile
 import os
-
-
+from PIL import Image
 
 # Step 1: Install gdown if necessary
 try:
@@ -31,12 +30,14 @@ gdown.download(file_url, output_path, quiet=False)
 with zipfile.ZipFile(output_path, 'r') as zip_ref:
     zip_ref.extractall("extracted_files")
 
-# Step 4: List extracted files
-#st.write("Files extracted:")
-#for root, dirs, files in os.walk("extracted_files"):
-#    for file in files:
-#        st.write(file)
+# Step 4: Initialize the list to hold the paths of extracted files
+extracted_files = []
 
+# List all files in the extracted folder
+for root, dirs, files in os.walk("extracted_files"):
+    for file in files:
+        extracted_files.append(os.path.join(root, file))
+        st.write(file)  # Display the file names
 
 # Step 5: Display an image (if any image files are found)
 # Check if there are any image files in the extracted files
@@ -49,5 +50,3 @@ if image_files:
     st.image(image, caption=f"Displaying {os.path.basename(image_path)}", use_column_width=True)
 else:
     st.write("No image files found in the extracted folder.")
-
-
