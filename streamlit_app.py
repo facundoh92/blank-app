@@ -8,6 +8,12 @@ option = st.selectbox(
     ["Option 1", "Option 2", "Option 3"]
 )
 
+import streamlit as st
+import gdown
+import zipfile
+import os
+
+
 
 # Step 1: Install gdown if necessary
 try:
