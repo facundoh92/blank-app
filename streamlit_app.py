@@ -2,7 +2,8 @@ import streamlit as st
 from PIL import Image
 import os
 from model import model_interp,vae_loaded,show_interp
-st.title("🎈 My new app prueba mensaje")
+import torchvision
+st.title("🎈 My new app prueba mensaje2")
 
 #selected_nationality = st.selectbox("Select Nationality", "Select Position")
 option = st.selectbox(
