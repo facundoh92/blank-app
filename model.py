@@ -1,6 +1,7 @@
 import pandas as pd
 import torch
 import torchvision
+
 from PIL import Image
 
 def remove_noise(image):
@@ -45,9 +46,9 @@ import torchvision
 class affectnetDataset(torch.utils.data.Dataset):
     def __init__(self):
         super(affectnetDataset, self).__init__()
-        self.data = pd.read_csv("/content/filtered_data_fix2_withimages.csv")
+        self.data = pd.read_csv("/workspaces/blank-app/filtered_data_fix2_withimages.csv")
 
-        f,l = read_images_from_csv("/content/filtered_data_fix2_withimages.csv", n=-1)
+        f,l = read_images_from_csv("/workspaces/blank-app/filtered_data_fix2_withimages.csv", n=-1)
 
 
         names = list(self.data["Name"])
@@ -106,6 +107,7 @@ class DEC_block(nn.Module):
       #inserte su código aquí
         return self.activation(self.batch_norm(self.conv2d(X)))
 
+
 n_G = 48
 
 class Variational_Encoder(nn.Module):
@@ -136,8 +138,7 @@ class Variational_Encoder(nn.Module):
         eps = torch.randn_like(std)
         latente = eps.mul(std).add_(media)
         return (latente, media, log_var)
-
-
+    
 class Decoder(nn.Module):
     def __init__(self, latent_dims):
         super(Decoder, self).__init__()
@@ -178,3 +179,72 @@ def vae_loss(x, x_hat, media, log_var):
     latent_loss = -0.5 * torch.sum(1 + log_var - log_var.exp() - media.pow(2))
     return reconstruction_weight * reconstruction_loss + latent_weight * latent_loss
 
+
+# Reinitialize the model (make sure it matches the saved model architecture)
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+latent_dims = 100
+vae_loaded = Variational_Autoencoder(latent_dims).to(device)
+
+# Load the saved state dictionary into the new model
+vae_loaded.load_state_dict(torch.load("vae_model32.pth", map_location=torch.device(device))) 
+
+# Set the model to evaluation mode for inference
+vae_loaded.eval()
+
+import numpy as np
+
+def get_interp(v1, v2, n):
+  if not v1.shape == v2.shape:
+    raise Exception('Different vector size')
+
+  v1 = v1.to("cpu")
+  v2 = v2.to("cpu")
+
+  return np.array([np.linspace(v1[i], v2[i], n+2) for i in range(v1.shape[0])]).T
+
+
+def model_interp(model, index1, index2, size = 15):
+  #inserte su código aquí
+    image1 = affect[index1][0].unsqueeze(0).to(device)
+    image2 = affect[index2][0].unsqueeze(0).to(device)
+
+    img1_compressed,_,_ = model.encoder(image1)
+    img2_compressed,_,_ = model.encoder(image2)
+
+    interp = get_interp(img1_compressed.detach().cpu(), img2_compressed.detach().cpu(), size)
+
+    interp = torch.from_numpy(interp)
+
+    interp = interp.permute(1,0,2).unsqueeze(3)
+
+    print(interp.shape)
+
+    generated_images = model.decoder(interp.to(device))
+
+    return generated_images
+
+from matplotlib import pyplot as plt
+
+def show_interp(imgs, index1, index2,  scale=1.5):
+    """Plot a list of images.
+
+    Defined in :numref:`sec_utils`"""
+    figsize = (12 * scale, 1 * scale)
+    _, axes = plt.subplots(1, 17, figsize=figsize)
+    axes = axes.flatten()
+    for i, (ax, img) in enumerate(zip(axes, imgs)):
+        try:
+            img = img.detach().numpy()
+        except:
+            pass
+        if i==0:
+            ax.set_title(affect[index1][1])
+            ax.imshow(affect[index1][0].permute(1,2,0).cpu().detach().numpy())
+        elif i==16:
+            ax.set_title(affect[index2][1])
+            ax.imshow(affect[index2][0].permute(1,2,0).cpu().detach().numpy())
+        else:
+          ax.imshow(img)
+          ax.axes.get_xaxis().set_visible(False)
+          ax.axes.get_yaxis().set_visible(False)
+    return axes
