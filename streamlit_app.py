@@ -41,13 +41,13 @@ for root, dirs, files in os.walk("extracted_files"):
 # Step 5: Sort the extracted files in ascending order by filename
 extracted_files = sorted(extracted_files)
 
-# Step 6: Display sorted images
+# Step 6: Find the first image file in sorted order
 image_files = [f for f in extracted_files if f.lower().endswith(('jpg', 'jpeg', 'png'))]
 
 if image_files:
-    # Display each image in sorted order
-    for image_path in image_files:
-        image = Image.open(image_path)
-        st.image(image, caption=f"Displaying {os.path.basename(image_path)}", use_column_width=True)
+    # Display the first image in the sorted list
+    first_image_path = image_files[0]
+    first_image = Image.open(first_image_path)
+    st.image(first_image, caption=f"Displaying {os.path.basename(first_image_path)}", use_column_width=True)
 else:
     st.write("No image files found in the extracted folder.")
