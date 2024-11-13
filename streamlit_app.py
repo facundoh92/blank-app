@@ -56,3 +56,28 @@ if st.button("Download and Extract FIFA Data"):
         st.image(image, caption=f"Image: {image_files[0]}", use_column_width=True)
     else:
         st.write("No images found in the extracted folder.")
+
+import streamlit as st
+import os
+
+# Function to display the folders in a given directory
+def list_folders(directory):
+    # List all directories in the specified path
+    folders = [f for f in os.listdir(directory) if os.path.isdir(os.path.join(directory, f))]
+    return folders
+
+# Display the list of folders
+st.title("Check Created Folders")
+
+# Button to check folders in the current directory
+if st.button("Check Folders"):
+    # List the folders in the current directory or specify a path
+    current_directory = os.getcwd()  # or use a specific directory like "data"
+    folders = list_folders(current_directory)
+    
+    if folders:
+        st.write("Created folders:")
+        for folder in folders:
+            st.write(folder)
+    else:
+        st.write("No folders found.")
